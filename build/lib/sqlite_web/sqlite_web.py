@@ -20,6 +20,9 @@ from io import TextIOWrapper
 from logging.handlers import WatchedFileHandler
 from werkzeug.routing import BaseConverter
 
+
+GOOGLE_MAPS_KEY = 'AIzaSyAjbKL5BdEC1_Zp5_0n0vyfUupmONttOL4'
+
 # Py2k compat.
 if sys.version_info[0] == 2:
     PY2 = True
@@ -36,6 +39,8 @@ else:
     unicode_type = str
     from functools import reduce
     from io import StringIO
+
+
 
 try:
     from flask import (
@@ -359,7 +364,7 @@ def table_create():
         app.logger.exception('Error attempting to create table.')
     return redirect(url_for('table_import', table=table))
 
-@app.route('/<table>/')
+@app.route('/<table>/structure/')
 @require_table
 def table_structure(table):
     ds_table = dataset[table]
@@ -583,8 +588,7 @@ def drop_trigger(table):
         name=name,
         table=table)
 
-
-@app.route('/<table>/content/')
+@app.route('/<table>/')
 @require_table
 def table_content(table):
     page_number = request.args.get('page') or ''
@@ -633,7 +637,8 @@ def table_content(table):
         table_pk=model._meta.primary_key,
         table_sql=dataset.get_table_sql(table),
         total_pages=total_pages,
-        total_rows=total_rows)
+        total_rows=total_rows,
+         GOOGLE_MAPS_KEY=GOOGLE_MAPS_KEY)
 
 def minimal_validate_field(field, value):
     if value.lower().strip() == 'null':

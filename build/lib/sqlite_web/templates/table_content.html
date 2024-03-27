@@ -12,10 +12,12 @@
   <table class="table table-striped small cell-content">
     <thead>
 
+
       <tr>
         {% if 'lat' in field_names and 'lon' in field_names %}
         <th>Map</th>
         {% endif %}
+        {% if not dataset.is_readonly and table_pk %}<th></th>{% endif %}
         {% for column in columns %}
           <th>
             <a href="./?ordering={% if ordering == column %}-{% endif %}{{ column }}">{{ column }}</a>
@@ -25,15 +27,18 @@
 
 
 
-        {% if not dataset.is_readonly and table_pk %}<th></th>{% endif %}
+      
       </tr>
     </thead>
     <tbody>
+      {%if table_pk %}
+      {% set pk = row|encode_pk(table_pk) %}
+      {% endif %}
       {% for row in query %}
+     
+      <tr id="row-{{ pk }}">
 
-      <tr>
-
-        {% if row['lat'] and row['lon'] %}
+        {% if  table == 'to_add' or table == 'to_delete' %}
         <td>
         <iframe
           width="600"
@@ -41,24 +46,44 @@
           style="border:0"
           loading="lazy"
           allowfullscreen
-          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAjbKL5BdEC1_Zp5_0n0vyfUupmONttOL4&q={{ row['lat'] }},{{ row['lon'] }}&maptype=satellite&zoom=18">
+          src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_MAPS_KEY }}&q={{ row['lat'] }},{{ row['lon'] }}&maptype=satellite&zoom=18">
         </iframe>
      
         </td>
     {% endif %}
 
+    {% if not dataset.is_readonly and table_pk %}
+    <td>
+      
+      <!-- {% if not is_view or 'update' in view_ops %}
+      <a class="small" href="{{ url_for('table_update', table=table, pk=pk) }}">Edit</a>
+      {% endif %} -->
+      {% if not is_view or 'delete' in view_ops %}
+      <!-- <a class="small" href="{{ url_for('table_delete', table=table, pk=pk) }}">Delete</a> -->
+      <button class="delete-row" data-rowid="{{pk}}" data-table="{{ table }}">Delete</button>
 
-        {% for field in field_names %}
-        
-          {% set value = row[field] %}
-          <td>
-            {% if value is none %}
-              <code>NULL</code>
-            {% else %}
-              {{ value|value_filter|safe }}
-            {% endif %}
-          </td>
-        {% endfor %}
+      {% endif %}
+    </td>
+  {% endif %}
+
+
+    {% for field in field_names %}
+    {% set value = row[field] %}
+    <td>
+      {% if value is none %}
+        <code>NULL</code>
+      {% else %}
+      {% if field in ['lat', 'lon', 'comment'] and ( table == 'to_add' or table == 'to_delete' )%}
+      
+      <input type="text" class="editable-field" data-field="{{ field }}" data-rowid="{{pk}}" data-table="{{ table }}" value="{{ value|value_filter|safe }}" />
+    {% else %}
+      {{ value|value_filter|safe }}
+    {% endif %}
+      {% endif %}
+    </td>
+  {% endfor %}
+  
+
        
       </tr>
     {% endfor %}

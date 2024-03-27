@@ -1,7 +1,5 @@
 App = window.App || {};
 
-
-
 (function(exports, $) {
     initialize = function() {
         /* Toggle long values on/off. */
@@ -247,43 +245,3 @@ App = window.App || {};
     exports.Bookmarks = Bookmarks;
     exports.Recent = Recent;
 })(App, jQuery);
-
-
-$(document).ready(function() {
-    $('.editable-field').on('blur', function() {
-      var field = $(this).data('field');
-      var rowid = $(this).data('rowid');
-      var table = $(this).data('table');
-      var value = $(this).val();
-
-      var pk = btoa(rowid);  // Base64 encode the primary key
-      $.ajax({
-        url: '/' + table + '/update/' + pk ,
-        type: 'POST',
-        data: {
-          [field]: value
-        },
-        success: function(response) {
-          // Show a success popup
-
-        }
-      });
-    });
-  });
-
-  $(document).ready(function() {
-    $('.delete-row').on('click', function() {
-      var rowid = $(this).data('rowid');
-      var table = $(this).data('table');
-  
-      var pk = btoa(rowid);  // Base64 encode the primary key
-      $.ajax({
-        url: '/' + table + '/delete/' + pk ,
-        type: 'POST',
-        success: function(response) {
-          // Remove the row from the table with id="row-{{ pk }}"
-           document.getElementById('row-' + rowid).remove();
-        }
-      });
-    });
-  });

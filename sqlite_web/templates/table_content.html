@@ -12,6 +12,7 @@
   <table class="table table-striped small cell-content">
     <thead>
 
+
       <tr>
         {% if 'lat' in field_names and 'lon' in field_names %}
         <th>Map</th>
@@ -31,8 +32,8 @@
     </thead>
     <tbody>
       {% for row in query %}
-
-      <tr>
+      {% set pk = row|encode_pk(table_pk) %}
+      <tr id="row-{{ pk }}">
 
         {% if  table == 'to_add' or table == 'to_delete' %}
         <td>
@@ -50,12 +51,14 @@
 
     {% if not dataset.is_readonly and table_pk %}
     <td>
-      {% set pk = row|encode_pk(table_pk) %}
-      {% if not is_view or 'update' in view_ops %}
+      
+      <!-- {% if not is_view or 'update' in view_ops %}
       <a class="small" href="{{ url_for('table_update', table=table, pk=pk) }}">Edit</a>
-      {% endif %}
+      {% endif %} -->
       {% if not is_view or 'delete' in view_ops %}
-      <a class="small" href="{{ url_for('table_delete', table=table, pk=pk) }}">Delete</a>
+      <!-- <a class="small" href="{{ url_for('table_delete', table=table, pk=pk) }}">Delete</a> -->
+      <button class="delete-row" data-rowid="{{pk}}" data-table="{{ table }}">Delete</button>
+
       {% endif %}
     </td>
   {% endif %}
@@ -67,11 +70,12 @@
       {% if value is none %}
         <code>NULL</code>
       {% else %}
-        {% if field in ['lat', 'lon', 'comment'] and ( table == 'to_add' or table == 'to_delete' )%}
-          <input type="text" class="editable-field" data-field="{{ field }}" data-rowid="{{ row['id'] }}" data-table="{{ table }}" value="{{ value|value_filter|safe }}" />
-        {% else %}
-          {{ value|value_filter|safe }}
-        {% endif %}
+      {% if field in ['lat', 'lon', 'comment'] and ( table == 'to_add' or table == 'to_delete' )%}
+      
+      <input type="text" class="editable-field" data-field="{{ field }}" data-rowid="{{pk}}" data-table="{{ table }}" value="{{ value|value_filter|safe }}" />
+    {% else %}
+      {{ value|value_filter|safe }}
+    {% endif %}
       {% endif %}
     </td>
   {% endfor %}

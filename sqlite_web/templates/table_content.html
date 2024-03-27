@@ -31,10 +31,12 @@
       </tr>
     </thead>
     <tbody>
+
+      {% for row in query %}
+
       {%if table_pk %}
       {% set pk = row|encode_pk(table_pk) %}
       {% endif %}
-      {% for row in query %}
      
       <tr id="row-{{ pk }}">
 
@@ -46,7 +48,7 @@
           style="border:0"
           loading="lazy"
           allowfullscreen
-          src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_MAPS_KEY }}&q={{ row['lat'] }},{{ row['lon'] }}&maptype=satellite&zoom=18">
+          src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_MAPS_KEY }}&q={{ row['lat'] }},{{ row['lon'] }}&maptype=satellite&zoom=19">
         </iframe>
      
         </td>

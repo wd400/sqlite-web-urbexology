@@ -287,3 +287,22 @@ $(document).ready(function() {
       });
     });
   });
+
+
+
+
+    $(document).ready(function() {
+        $('.validate-contributions').on('click', function() {
+            $.ajax({
+            url:  '/validate',
+            type: 'POST',
+            success: function(response) {
+                //refresh the page
+                location.reload();
+            },
+            error: function(response) {
+                alert('Error: ' + response.responseText);
+            }
+            });
+        });
+        });

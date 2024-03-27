@@ -1016,6 +1016,20 @@ def drop_table(table):
 
     return render_template('drop_table.html', is_view=is_view, table=table)
 
+
+# post route to execute /home/zach/auto_urbex/api/validate_contributions.py
+
+
+@app.route('/validate', methods=['POST'])
+def validate():
+    # call the python script in /home/zach/auto_urbex/api, don't wait for it to finish
+    path="/home/zach/auto_urbex/api/"
+    #also move to /home/zach/auto_urbex/api in the command
+    os.system("cd "+path+" && python3 validate_contributions.py &")
+    return redirect(url_for('index'))
+
+
+
 @app.template_filter('format_index')
 def format_index(index_sql):
     split_regex = re.compile(r'\bon\b', re.I)

@@ -31,8 +31,11 @@
       </tr>
     </thead>
     <tbody>
-      {% for row in query %}
+      {%if table_pk %}
       {% set pk = row|encode_pk(table_pk) %}
+      {% endif %}
+      {% for row in query %}
+     
       <tr id="row-{{ pk }}">
 
         {% if  table == 'to_add' or table == 'to_delete' %}

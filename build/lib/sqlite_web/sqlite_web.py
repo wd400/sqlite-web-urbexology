@@ -1050,7 +1050,7 @@ def pk_display(table_pk, pk):
     return pk
 
 @app.template_filter('value_filter')
-def value_filter(value, max_length=50):
+def value_filter(value, max_length=500):
     if isinstance(value, numeric):
         return value
 

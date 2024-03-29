@@ -44,7 +44,7 @@
         <td>
         <iframe
           width="600"
-          height="450"
+          height=600"
           style="border:0"
           loading="lazy"
           allowfullscreen
@@ -77,7 +77,9 @@
       {% else %}
       {% if field in ['lat', 'lon', 'comment'] and ( table == 'to_add' or table == 'to_delete' )%}
       
-      <textarea  class="editable-field"  data-field="{{ field }}" data-rowid="{{pk}}" data-table="{{ table }}"  >{{ value|safe }}</textarea>
+      <textarea  class="editable-field"  data-field="{{ field }}" data-rowid="{{pk}}" data-table="{{ table }}" 
+      {{ if field == 'comment' }}rows="4"{{ endif }}
+      >{{ value|safe }}</textarea>
     {% else %}
       {{ value|value_filter|safe }}
     {% endif %}

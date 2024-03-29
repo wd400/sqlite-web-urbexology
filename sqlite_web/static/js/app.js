@@ -254,7 +254,9 @@ $(document).ready(function() {
       var field = $(this).data('field');
       var rowid = $(this).data('rowid');
       var table = $(this).data('table');
-      var value = $(this).val();
+      
+      //value is the content of the textarea
+        var value = $(this).val();
 
       var pk = btoa(rowid);  // Base64 encode the primary key
       $.ajax({

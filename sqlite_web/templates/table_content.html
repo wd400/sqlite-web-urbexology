@@ -48,7 +48,7 @@
           style="border:0"
           loading="lazy"
           allowfullscreen
-          src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_MAPS_KEY }}&q={{ row['lat'] }},{{ row['lon'] }}&maptype=satellite&zoom=19">
+          src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_MAPS_KEY }}&q={{ row['lat'] }},{{ row['lon'] }}&maptype=satellite&zoom=20">
         </iframe>
      
         </td>
@@ -77,7 +77,7 @@
       {% else %}
       {% if field in ['lat', 'lon', 'comment'] and ( table == 'to_add' or table == 'to_delete' )%}
       
-      <input type="text" class="editable-field" data-field="{{ field }}" data-rowid="{{pk}}" data-table="{{ table }}" value="{{ value|value_filter|safe }}" />
+      <textarea  class="editable-field"  data-field="{{ field }}" data-rowid="{{pk}}" data-table="{{ table }}"  >{{ value|safe }}</textarea>
     {% else %}
       {{ value|value_filter|safe }}
     {% endif %}

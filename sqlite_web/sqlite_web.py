@@ -1019,13 +1019,32 @@ def drop_table(table):
 
 # post route to execute /home/zach/auto_urbex/api/validate_contributions.py
 
+from threading import Lock
+import subprocess
+
+lock = Lock()
+
+#use a thread and a lock to run it only once at a time
+def thread_validate():
+
+
+    path="/home/zach/auto_urbex/api/"
+    #also move to /home/zach/auto_urbex/api in the command
+    p = subprocess.run(["python3", "validate_contributions.py"], cwd=path)
+    print("validate_contributions.py finished with return code", p.returncode)
+    lock.release()
+
+
+import threading
 
 @app.route('/validate', methods=['POST'])
 def validate():
-    # call the python script in /home/zach/auto_urbex/api, don't wait for it to finish
-    path="/home/zach/auto_urbex/api/"
-    #also move to /home/zach/auto_urbex/api in the command
-    os.system("cd "+path+" && python3 validate_contributions.py &")
+    #if lock is not acquired, return
+    if not lock.acquire(blocking=False):
+        return "already running"
+    #run the thread
+    threading.Thread(target=thread_validate).start()
+    #return to index
     return redirect(url_for('index'))
 
 

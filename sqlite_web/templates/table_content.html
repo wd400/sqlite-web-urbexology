@@ -78,7 +78,7 @@
       {% if field in ['lat', 'lon', 'comment'] and ( table == 'to_add' or table == 'to_delete' )%}
       
       <textarea  class="editable-field"  data-field="{{ field }}" data-rowid="{{pk}}" data-table="{{ table }}" 
-      {{ if field == 'comment' }}rows="4"{{ endif }}
+      {% if field == 'comment' %} rows="10" {% endif %}
       >{{ value|safe }}</textarea>
     {% else %}
       {{ value|value_filter|safe }}
